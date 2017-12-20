@@ -1,7 +1,7 @@
 
 
 function preload() {
-	player_img = loadImage("Temp_Player.png");
+	player_img = loadImage("Assets/Temp_Player.png");
 }
 
 function setup() {

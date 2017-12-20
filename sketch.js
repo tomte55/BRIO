@@ -3,9 +3,8 @@ var y = 0;
 var r = 50;
 
 function setup() {
-	createCanvas(1000, 1000);
+	createCanvas(500, 500);
 	rectMode(CENTER);
-	frameRate(5);
 }
 
 function draw() {

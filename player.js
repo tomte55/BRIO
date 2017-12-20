@@ -5,9 +5,8 @@ function Player() {
 
   this.moveSpeed = 5;
   this.stamina = 100;
-  this.fade = 255; // Stamina bar fade
+  this.fade = 0; // Stamina bar fade
 
-New-Features
   this.update = function() {
 
     // Sprint Function
@@ -42,19 +41,32 @@ New-Features
     if (keyIsDown(65)) { this.x -= this.moveSpeed; } }
 
     this.show = function() {
-
       // Main player
+      stroke(255, 0, 0, 150);
+      line(this.x, this.y, mouseX, mouseY);
+      angle = map(mouseX, 0, width, 0, 10);
+      stroke(0);
       ellipse(this.x, this.y, this.r);
-
-
+      push();
+      translate(this.x, this.y);
+      // rotate(angle);
+      rect(0, 0, this.r, this.r*2);
+      pop();
+      // image(player_img, this.x, this.y);
       // Stamina bar
-      fill(0, 180, 255, this.fade);
       strokeWeight(0);
+
+      fill(0, 0, 0, this.fade);
+      rect(this.x, this.y+35, this.stamina+3, 13);
+
+      fill(0, 180, 200, this.fade);
       rect(this.x, this.y+35, this.stamina, 10);
       if (this.stamina < 100) {
         this.fade = 255;
       } else {
-        this.fade -= 5;
+        if (this.fade != 0) {
+          this.fade -= 5;
+        }
       }
 
       // Draw pickup text and equip
@@ -69,6 +81,7 @@ New-Features
           pistol.equipped = true;
         }
       }
+
       strokeWeight(2);
     }
   }

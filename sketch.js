@@ -1,9 +1,23 @@
 
+
+function preload() {
+	player_img = loadImage("Temp_Player.png");
+}
+
 function setup() {
-	createCanvas(500, 500);
+	createCanvas(windowWidth, windowHeight);
+	player = new Player();
+	pistol = new Pistol();
+	rectMode(CENTER);
+	ellipseMode(RADIUS);
 }
 
 function draw() {
 	background(150);
-	
+
+	player.show();
+	player.update();
+
+	pistol.show();
+	pistol.update();
 }

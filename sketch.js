@@ -12,13 +12,8 @@ function draw() {
 	background(150);
 
 	// Ritar en Rektangel i mitten av skärmen
-	ellipse(x, y, r);
+	ellipse(x, y, r,);
 
-	
-	textSize(100);
-	textAlign(CENTER);
-	fill(random(255), random(255), random(255));
-	text("Ska dra till myway", width/2, height/2);
 }
 
 

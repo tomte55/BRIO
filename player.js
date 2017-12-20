@@ -6,6 +6,6 @@ function Player() {
 
 
   this.show = function() {
-    rect(this.x, this.yt, this.xs, this.ys);
+    rect(this.x, this.y, this.xs, this.ys);
   }
 }

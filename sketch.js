@@ -1,10 +1,12 @@
-var x = 0;
-var y = 0;
-var r = 50;
+var x = 100;
+var y = 100;
+var r = 100;
+
+var dragging = false
 
 function setup() {
 	createCanvas(500, 500);
-	rectMode(CENTER);
+	ellipseMode(RADIUS);
 }
 
 function draw() {
@@ -12,11 +14,22 @@ function draw() {
 
 	// Ritar en Rektangel i mitten av skärmen
 	ellipse(x, y, r,);
+}
+	function mousePressed() {
+		if (dist(mouseX, mouseY, x, y) < r) {
+			dragging = true
+			offsetX = x - mouseX;
+			offsetY = y - mouseY;
+		}
+	}
 
+function mouseDragged() {
+	if (dragging) {
+		x = mouseX + offsetX;
+		y = mouseY + offsetY;
+	}
 }
 
-
-function mousePressed() {
-	x = mouseX;
-	y = mouseY;
+function mouseReleased() {
+	dragging = false
 }

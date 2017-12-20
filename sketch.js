@@ -15,9 +15,11 @@ function setup() {
 function draw() {
 	background(150);
 
+
 	player.show();
 	player.update();
 
 	pistol.show();
 	pistol.update();
+
 }

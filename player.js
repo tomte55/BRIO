@@ -7,6 +7,7 @@ function Player() {
   this.stamina = 100;
   this.fade = 255; // Stamina bar fade
 
+New-Features
   this.update = function() {
 
     // Sprint Function

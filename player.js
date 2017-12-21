@@ -1,7 +1,7 @@
 function Player() {
   this.x = width/2;
   this.y = height/2;
-  this.r = 25;
+  this.r = 15;
 
   this.moveSpeed = 5;
   this.fade = 0; // Stamina bar fade
@@ -55,29 +55,37 @@ function Player() {
   }
 
   this.show = function() {
-    // stroke(255, 0, 0, 150);
-    // line(this.x, this.y, mouseX, mouseY);
 
     // Main player
     push();
+    stroke(255, 0, 0, 150);
+    line(this.x, this.y, mouseX, mouseY);
     stroke(0);
     translate(this.x, this.y);
     // Ammo text
-    textAlign(CENTER);
-    textSize(15);
-    textFont(myFont);
-    text(pistol.ammoClip + " / " + pistol.ammoPool, 0, 60);
-    // Text End
+    if (pistol.equipped) {
+      textAlign(CENTER);
+      textSize(15);
+      textFont(myFont);
+      text(pistol.ammoClip + " / " + pistol.ammoPool, 0, 60);
+    }
     rotate(this.bearing);
+    if (debug) {
+      ellipse(0, 0, this.r) // Sphere Collider
+    }
     triangle(0, -15, 15, 15, -15, 15);
 
-
     if (pistol.equipped) {
-      rect(0, 6, 10, 20); // Put weapon image here and put logic for primary or secondary
+      if (pistol.equipped) {
+        fill(60, 150, 50);
+      } else {
+        fill(60, 90, 255);
+      }
+      strokeWeight(1);
+      rect(0, 5, 5, 20); // Put weapon image here and put logic for primary or secondary
     }
-
     pop();
-    // image(player_img, this.x, this.y);
+
 
     // Stamina bar
     strokeWeight(0);

@@ -1,7 +1,8 @@
 function Pistol() {
 
-  this.x = 300;
-  this.y = 500;
+
+  this.x = player.x;
+  this.y = player.y;
   this.size = 1;
 
   this.ammoPool = 50;
@@ -21,6 +22,8 @@ function Pistol() {
         if (this.ammoClip < this.maxClip) {
           this.ammoClip += 1;
           this.ammoPool -= 1;
+        } else {
+          this.reloading = false;
         }
       }
     }
@@ -29,14 +32,21 @@ function Pistol() {
   this.show = function() {
     // fill(0, 0, 0, 100);
     // ellipse(this.x, this.y, 15);
-    fill(0);
+    push();
+    fill(60, 150, 50);
+    strokeWeight(1);
     if (!this.equipped) {
       rect(this.x, this.y, 20*this.size, 5*this.size);
     }
+    strokeWeight(2);
     fill(255);
   }
 
   this.reload = function() {
     this.reloading = true;
+  }
+
+  this.addAmmo = function() {
+    this.ammoPool += 10;
   }
 }

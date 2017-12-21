@@ -8,12 +8,16 @@ function preload() {
 	myFont = loadFont("Assets/Fonts/Pixel.ttf");
 
 	hud = loadImage("Assets/IngameO.png");
+
+	ak47 = loadImage("Assets/ak47.png");
+	glock = loadImage("Assets/glock19.png");
 }
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	player = new Player();
 	pistol = new Pistol();
+	enemy = new Enemy();
 	rectMode(CENTER);
 	ellipseMode(RADIUS);
 	cursor(CROSS);
@@ -33,6 +37,7 @@ function draw() {
 			ammoBoxes.splice(i, 1);
 		}
 	}
+	enemy.show();
 
 	player.show();
 	player.update();
@@ -54,11 +59,15 @@ function draw() {
 		}
 	}
 
+	// HUD
 	image(hud, 0, 0, windowWidth, windowHeight);
+	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
+	image(glock, 175, height-50, glock.width-1400, glock.height-950);
 }
 
 
 function mousePressed() {
+	bullets.push(new Bullet(enemy.x, enemy.y, enemy.bearing, pistol.damage));
 	if (pistol.equipped) {
 		if (pistol.ammoClip > 0) {
 			if (!pistol.reloading) {

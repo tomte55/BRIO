@@ -5,7 +5,9 @@ bullets = [];
 ammoBoxes = [];
 
 function preload() {
-	myFont = loadFont("Assets/Fonts/Plane Crash.ttf");
+	myFont = loadFont("Assets/Fonts/Pixel.ttf");
+
+	hud = loadImage("Assets/IngameO.png");
 }
 
 function setup() {
@@ -51,6 +53,8 @@ function draw() {
 			bullets.splice(i, 1);
 		}
 	}
+
+	image(hud, 0, 0, windowWidth, windowHeight);
 }
 
 

@@ -62,13 +62,6 @@ function Player() {
     line(this.x, this.y, mouseX, mouseY);
     stroke(0);
     translate(this.x, this.y);
-    // Ammo text
-    if (pistol.equipped) {
-      textAlign(CENTER);
-      textSize(15);
-      textFont(myFont);
-      text(pistol.ammoClip + " / " + pistol.ammoPool, 0, 60);
-    }
     rotate(this.bearing);
     if (debug) {
       ellipse(0, 0, this.r) // Sphere Collider
@@ -86,18 +79,29 @@ function Player() {
     }
     pop();
 
+    // Ammo text
+    push();
+    fill(0);
+    textAlign(CENTER);
+    textSize(15);
+    textFont(myFont);
+    text(pistol.ammoClip + " / " + pistol.ammoPool, 205, height-6);
+
+    pop();
 
     // Stamina bar
     strokeWeight(0);
 
-    fill(0, 0, 0, this.fade);
-    // Stamina background
-    rect(this.x, this.y+35, this.stamina+3, 13);
+    // fill(0, 0, 0, this.fade);
+    // // Stamina background
+    // rect(this.x, this.y+35, this.stamina+3, 13);
 
-    fill(0, 180, 200, this.fade);
+    fill(0, 180, 200);
 
     // Actuall stamina
-    rect(this.x, this.y+35, this.stamina, 10);
+    rectMode(CORNER);
+    rect(8, height-55, this.stamina*1.6, 55);
+    rectMode(CENTER);
     if (this.stamina < 100) {
       this.fade = 255;
     } else {

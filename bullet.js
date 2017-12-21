@@ -1,15 +1,13 @@
-function Bullet(x, y, v1, v2) {
+function Bullet(x, y, angle) {
 
-  this.x = x;
-  this.y = y;
-
-  this.vector = [v1, v2];
+  this.pos = createVector(x, y);
+  this.vel = p5.Vector.fromAngle(PI / 2 + angle);
 
   this.dead = false;
 
   this.update = function() {
-    this.x += this.vector[0];
-    this.y += this.vector[1];
+    this.pos.x += -this.vel.x*10;
+    this.pos.y += -this.vel.y*10;
 
     if (this.x > width || this.x < 0 || this.y > height || this.y < 0) {
       this.dead = true;
@@ -19,7 +17,7 @@ function Bullet(x, y, v1, v2) {
   this.show = function() {
     fill(255, 200, 0);
     strokeWeight(0);
-    rect(this.x, this.y, 5, 5);
+    rect(this.pos.x, this.pos.y, 5, 5);
     strokeWeight(2);
     fill(255);
   }

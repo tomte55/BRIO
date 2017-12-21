@@ -1,7 +1,7 @@
 
 
 function preload() {
-	player_img = loadImage("Assets/player1.png");
+
 }
 
 bullets = [];
@@ -38,10 +38,5 @@ function draw() {
 
 
 function mousePressed() {
-	if (mouseX > player.x) {
-		bullets.push(new Bullet(player.x, player.y, 20, 0));
-	} else if (mouseX < player.x) {
-		bullets.push(new Bullet(player.x, player.y, -20, 0));
-	}
-	// bullets.push(new Bullet(player.x, player.y, 0, 0));
+	bullets.push(new Bullet(player.x, player.y, player.bearing));
 }

@@ -4,8 +4,10 @@ function Player() {
   this.r = 25;
 
   this.moveSpeed = 5;
-  this.stamina = 100;
   this.fade = 0; // Stamina bar fade
+
+  this.stamina = 100;
+  this.health = 100;
 
   this.bearing = PI / 2;
 
@@ -60,8 +62,20 @@ function Player() {
     push();
     stroke(0);
     translate(this.x, this.y);
+    // Ammo text
+    textAlign(CENTER);
+    textSize(15);
+    textFont(myFont);
+    text(pistol.ammoClip + " / " + pistol.ammoPool, 0, 60);
+    // Text End
     rotate(this.bearing);
     triangle(0, -15, 15, 15, -15, 15);
+
+
+    if (pistol.equipped) {
+      rect(0, 6, 10, 20); // Put weapon image here and put logic for primary or secondary
+    }
+
     pop();
     // image(player_img, this.x, this.y);
 

@@ -1,6 +1,4 @@
 function Pistol() {
-
-
   this.x = player.x;
   this.y = player.y;
   this.size = 1;
@@ -8,7 +6,6 @@ function Pistol() {
   this.ammoPool = 50;
   this.ammoClip = 10;
   this.maxClip = 10;
-
 
   this.damage = 10;
 

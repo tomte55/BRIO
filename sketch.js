@@ -14,11 +14,6 @@ function preload() {
 	glock = loadImage("Assets/glock19.png");
 }
 
-
-function preload() {
-	// player_img = loadImage("Assets/Temp_Player.png");
-}
-
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	player = new Player();

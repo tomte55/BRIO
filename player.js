@@ -11,8 +11,10 @@ function Player() {
 
   this.bearing = PI / 2;
 
+  this.dead = false;
+
   this.update = function() {
-    this.bearing = PI /2 + atan2(mouseY-this.y, mouseX-this.x);
+    this.bearing = PI / 2 + atan2(mouseY-this.y, mouseX-this.x);
 
     // Sprint Function
     if (keyIsDown(16)) {
@@ -58,9 +60,6 @@ function Player() {
 
     // Main player
     push();
-    stroke(255, 0, 0, 150);
-    line(this.x, this.y, mouseX, mouseY);
-    stroke(0);
     translate(this.x, this.y);
     rotate(this.bearing);
     if (debug) {
@@ -86,21 +85,19 @@ function Player() {
     textSize(15);
     textFont(myFont);
     text(pistol.ammoClip + " / " + pistol.ammoPool, 208, height-6);
-
     pop();
+
+    // Health bar
+    strokeWeight(0)
+    fill(255, 50, 50);
+    rectMode(CORNER);
+    rect(7, height-110, this.health*1.6, 55);
 
     // Stamina bar
     strokeWeight(0);
-
-    // fill(0, 0, 0, this.fade);
-    // // Stamina background
-    // rect(this.x, this.y+35, this.stamina+3, 13);
-
     fill(0, 180, 200);
-
-    // Actuall stamina
     rectMode(CORNER);
-    rect(8, height-55, this.stamina*1.6, 55);
+    rect(7, height-55, this.stamina*1.6, 55);
     rectMode(CENTER);
     if (this.stamina < 100) {
       this.fade = 255;
@@ -122,7 +119,6 @@ function Player() {
         pistol.equipped = true;
       }
     }
-
     strokeWeight(2);
   }
 }

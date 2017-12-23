@@ -121,3 +121,4 @@ function Player() {
     }
     strokeWeight(2);
   }
+}

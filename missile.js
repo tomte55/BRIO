@@ -7,6 +7,8 @@ function Missile(x, y, angle, damage) {
   this.dead = false;
   this.health = 50;
 
+  this.lifeLength = 0;
+
   this.update = function() {
     this.pos.x += -this.vel.x*5;
     this.pos.y += -this.vel.y*5;
@@ -21,6 +23,8 @@ function Missile(x, y, angle, damage) {
   }
 
   this.show = function() {
+    fires.push(new Fire(this.pos.x, this.pos.y));
+    this.lifeLength ++;
     push();
     stroke(255, 0, 0, 50);
     line(this.pos.x, this.pos.y, player.x, player.y);
@@ -33,5 +37,9 @@ function Missile(x, y, angle, damage) {
     }
     rect(0, 0, 5, 15);
     pop();
+  }
+
+  this.explode = function() {
+    explosions.push(new Explosion(this.pos.x, this.pos.y));
   }
 }

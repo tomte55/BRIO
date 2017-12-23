@@ -4,6 +4,8 @@ var debug = false;
 bullets = [];
 missiles = [];
 ammoBoxes = [];
+fires = [];
+explosions = [];
 
 function preload() {
 	myFont = loadFont("Assets/Fonts/Pixel.ttf");
@@ -62,7 +64,6 @@ function draw() {
 		ammoBoxes.push(new AmmoBox());
 	}
 
-
 	for (var i = 0; i < bullets.length; i++) {
 		bullets[i].update();
 		bullets[i].show();
@@ -72,9 +73,24 @@ function draw() {
 		}
 	}
 
+	for (var i = 0; i < fires.length; i++) {
+		fires[i].show();
+		if (fires[i].fade < 0) {
+			fires.splice(i, 1);
+		}
+	}
+
+	for (var i = 0; i < explosions.length; i++) {
+		explosions[i].show();
+	}
+
 	for (var i = 0; i < missiles.length; i++) {
 		missiles[i].show();
 		missiles[i].update();
+
+		if (missiles[i].lifeLength > 1000) {
+			missiles[i].dead = true;
+		}
 
 		for (var j = 0; j < bullets.length; j++) {
 			if (dist(bullets[j].pos.x, bullets[j].pos.y, missiles[i].pos.x, missiles[i].pos.y) < bullets[j].r+missiles[i].r) {
@@ -84,12 +100,14 @@ function draw() {
 		}
 
 		if (missiles[i].health <= 0) {
+			missiles[i].explode();
 			missiles[i].dead = true;
 			ammoBoxes.push(new AmmoBox());
 			ammoBoxes.push(new AmmoBox());
 		}
 
 		if (dist(missiles[i].pos.x, missiles[i].pos.y, player.x, player.y) < player.r+missiles[i].r) {
+			missiles[i].explode();
 			player.health -= missiles[i].damage;
 			missiles[i].dead = true;
 		}

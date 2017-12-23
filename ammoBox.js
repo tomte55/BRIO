@@ -5,7 +5,8 @@ function AmmoBox() {
 
   this.types = ["primary", "secondary"];
 
-  this.type = random(this.types);
+  // this.type = random(this.types);
+  this.type = "secondary";
 
   this.show = function() {
     push();

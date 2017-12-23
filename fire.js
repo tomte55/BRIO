@@ -19,6 +19,7 @@ function Fire(x, y, r1=5, r2=10) {
 
     this.r -= 3;
     this.g -= 3;
+    this.radius += 0.1;
     pop();
   }
 }

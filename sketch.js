@@ -25,7 +25,6 @@ function setup() {
 	ellipseMode(RADIUS);
 	cursor(CROSS);
 
-
 	ammoBoxes.push(new AmmoBox());
 }
 
@@ -64,7 +63,6 @@ function draw() {
 	if (keyIsDown(27)) {
 		ammoBoxes.push(new AmmoBox());
 	}
-
 
 	for (var i = 0; i < bullets.length; i++) {
 		bullets[i].update();

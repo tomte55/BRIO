@@ -6,12 +6,16 @@ function Missile(x, y, angle, damage) {
   this.damage = damage;
   this.dead = false;
   this.health = 50;
+  this.speed = 6;
 
   this.lifeLength = 0;
 
   this.update = function() {
-    this.pos.x += -this.vel.x*5;
-    this.pos.y += -this.vel.y*5;
+    if (this.lifeLength > 30) {
+      this.pos.x += -this.vel.x*this.speed;
+      this.pos.y += -this.vel.y*this.speed;
+      this.released = true;
+    }
 
     this.vel = p5.Vector.fromAngle(PI / 2 + this.targetAngle);
 
@@ -23,7 +27,7 @@ function Missile(x, y, angle, damage) {
   }
 
   this.show = function() {
-    fires.push(new Fire(this.pos.x, this.pos.y));
+    fires.push(new Fire(this.pos.x, this.pos.y, 5, 10, this.targetAngle));
     this.lifeLength ++;
     push();
     stroke(255, 0, 0, 50);

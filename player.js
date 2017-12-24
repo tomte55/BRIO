@@ -16,12 +16,16 @@ function Player() {
   this.update = function() {
     this.bearing = PI / 2 + atan2(mouseY-this.y, mouseX-this.x);
 
+    if (debug) {
+      this.stamina = 100;
+    }
+
     // Sprint Function
     if (keyIsDown(16)) {
       if (this.stamina > 0) {
         this.moveSpeed = 10;
         if (this.stamina > 5) {
-          this.stamina -= 2;
+          this.stamina -= 1;
         } else {
           this.stamina -= 1;
         }

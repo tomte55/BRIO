@@ -27,7 +27,7 @@ function Fire(x, y, r1=5, r2=10, angle) {
     this.fade -= 3;
     this.r -= 3;
     this.g -= 3;
-    this.radius += 0.2;
+    this.radius += 0.3;
     pop();
   }
 }

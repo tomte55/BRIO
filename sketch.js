@@ -32,20 +32,6 @@ function setup() {
 
 function draw() {
 	background(150);
-	textSize(18);
-	if (frameRate() < 50) {
-		fill(255, 0, 0);
-	} else {
-		fill(0, 255, 0);
-	}
-	text("FPS: " + int(frameRate()), 35, 20);
-	fill(255);
-
-	if (debug) {
-		fill(255, 0, 0);
-		text("Debug Mode", 55, 40);
-		fill(255);
-	}
 
 	if (!focused) {
 		frameRate(1);
@@ -173,6 +159,21 @@ function draw() {
 	image(hud, 0, 0, windowWidth, windowHeight);
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);
+
+	textSize(18);
+	if (frameRate() < 50) {
+		fill(255, 0, 0);
+	} else {
+		fill(0, 255, 0);
+	}
+	text("FPS: " + int(frameRate()), 35, 20);
+	fill(255);
+
+	if (debug) {
+		fill(255, 0, 0);
+		text("Debug Mode", 55, 40);
+		fill(255);
+	}
 }
 
 function keyTyped() {

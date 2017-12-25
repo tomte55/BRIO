@@ -46,5 +46,6 @@ function Missile(x, y, angle, damage) {
 
   this.explode = function() {
     explosions.push(new Explosion(this.pos.x, this.pos.y));
+    this.dead = true;
   }
 }

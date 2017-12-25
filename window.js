@@ -8,12 +8,7 @@ function Window() {
 
 
   this.update = function() {
-    // Debug options
-    this.ammo = debug.ammo;
-    this.health = debug.health;
-    this.stamina = debug.stamina;
-    this.collider = debug.collider;
-    this.objects = debug.objects;
+
   }
 
   this.show = function() {
@@ -25,7 +20,7 @@ function Window() {
     text("Debug", this.x, this.y-this.ys/2+15);
     textAlign(LEFT);
     // Health
-    if (this.health) {
+    if (debug.health) {
       fill(0, 0, 0, 200);
     } else {
       fill(0, 0, 0, 50);
@@ -35,7 +30,7 @@ function Window() {
     text("Health", this.x-this.xs/2+45, this.y-this.ys/2+52);
 
     // Stamina
-    if (this.stamina) {
+    if (debug.stamina) {
       fill(0, 0, 0, 200);
     } else {
       fill(0, 0, 0, 50);
@@ -45,7 +40,7 @@ function Window() {
     text("Stamina", this.x-this.xs/2+45, this.y-this.ys/2+95);
 
     // Colliders
-    if (this.collider) {
+    if (debug.collider) {
       fill(0, 0, 0, 200);
     } else {
       fill(0, 0, 0, 50);
@@ -55,7 +50,7 @@ function Window() {
     text("Colliders", this.x-this.xs/2+45, this.y-this.ys/2+140);
 
     // Ammo
-    if (this.ammo) {
+    if (debug.ammo) {
       fill(0, 0, 0, 200);
     } else {
       fill(0, 0, 0, 50);
@@ -63,6 +58,16 @@ function Window() {
     rect(this.x-this.xs/2+20, this.y-this.ys/2+45*4, 20, 20, 5);
     fill(0);
     text("Ammo", this.x-this.xs/2+45, this.y-this.ys/2+185);
+
+    // Optimization
+    if (debug.optimization) {
+      fill(0, 0, 0, 200);
+    } else {
+      fill(0, 0, 0, 50);
+    }
+    rect(this.x-this.xs/2+20, this.y-this.ys/2+45*5, 20, 20, 5);
+    fill(0);
+    text("Disable optimization", this.x-this.xs/2+45, this.y-this.ys/2+230);
 
     textAlign(CENTER);
   }

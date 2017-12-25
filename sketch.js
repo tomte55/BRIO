@@ -4,7 +4,8 @@ var debug = {
 	health: false,
 	stamina: false,
 	collider: false,
-	objects: false
+	objects: false,
+	optimization: false
 };
 
 // Arrays
@@ -115,8 +116,10 @@ function draw() {
 	for (var i = 0; i < fires.length; i++) {
 		fires[i].update();
 		fires[i].show();
-		if (fires.length > 800) {
-			fires.splice(i, 1);
+		if (!debug.optimization) {
+			if (fires.length > 800) {
+				fires.splice(i, 1);
+			}
 		}
 		if (fires[i].fade < 0) {
 			fires.splice(i, 1);
@@ -265,6 +268,15 @@ function mousePressed() {
 				debug.ammo = false;
 			} else {
 				debug.ammo = true;
+			}
+		}
+
+		// Optimization debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*5, 20, 20)) {
+			if (debug.optimization) {
+				debug.optimization = false;
+			} else {
+				debug.optimization = true;
 			}
 		}
 	}

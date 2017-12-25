@@ -18,6 +18,8 @@ explosions = [];
 enemies = [];
 windows = [];
 
+var gamePaused = false;
+
 function checkMouse(x, y, xs, ys) {
 	// Checks if mouse is inside a rectangle
 	if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
@@ -49,14 +51,6 @@ function setup() {
 function draw() {
 	background(150);
 
-
-	// If window is not in focus set the fps to 1 so its almost paused
-	if (!focused) {
-		frameRate(1);
-	} else {
-		frameRate(60);
-	}
-
 	for (var i = 0; i < ammoBoxes.length; i++) {
 		ammoBoxes[i].show();
 
@@ -69,7 +63,9 @@ function draw() {
 	}
 	for (var i = 0; i < enemies.length; i++) {
 		if (!enemies[i].dead) {
-			enemies[i].update();
+			if (!gamePaused) {
+				enemies[i].update();
+			}
 			enemies[i].show();
 		}
 		if (enemies[i].health <= 0) {
@@ -79,8 +75,10 @@ function draw() {
 
 
 	if (!player.dead) {
+		if (!gamePaused) {
+			player.update();
+		}
 		player.show();
-		player.update();
 	} else {
 		textSize(50);
 		fill(0);
@@ -92,9 +90,10 @@ function draw() {
 	if (player.health <= 0) {
 		player.dead = true;
 	}
-
+	if (!gamePaused) {
+		pistol.update();
+	}
 	pistol.show();
-	pistol.update();
 
 	if (debug.enabled) {
 		if (keyIsDown(27)) {
@@ -103,7 +102,9 @@ function draw() {
 	}
 
 	for (var i = 0; i < bullets.length; i++) {
-		bullets[i].update();
+		if (!gamePaused) {
+			bullets[i].update();
+		}
 		bullets[i].show();
 
 		for (var j = 0; j < enemies.length; j++) {
@@ -121,7 +122,9 @@ function draw() {
 	}
 
 	for (var i = 0; i < fires.length; i++) {
-		fires[i].update();
+		if (!gamePaused) {
+			fires[i].update();
+		}
 		fires[i].show();
 		if (fires[i].fade < 0) {
 			fires[i].dead = true;
@@ -141,8 +144,10 @@ function draw() {
 	}
 
 	for (var i = 0; i < missiles.length; i++) {
+		if (!gamePaused) {
+			missiles[i].update();
+		}
 		missiles[i].show();
-		missiles[i].update();
 
 		if (missiles[i].lifeLength > 1000) {
 			missiles[i].explode(); // If missile has been alive for too long make it explode
@@ -190,8 +195,20 @@ function draw() {
 		rect(player.pos.x, player.pos.y+45, pistol.reloadTime/2, 8, 10);
 		strokeWeight(2);
 		if (debug.enabled) {
-			text(pistol.reloadTime, 500, 485);
+			text(pistol.reloadTime, player.pos.x, player.pos.y+40);
 		}
+	}
+	// If window is not in focus set the fps to 1 so its almost paused
+	if (!focused || gamePaused) {
+		gamePaused = true;
+		push();
+		fill(0);
+		textSize(50);
+		text("Game Paused", width/2, height/2-150);
+		textSize(40);
+		text("Click inside window", width/2, height/2-75);
+		text("And press ESCAPE", width/2, height/2-25);
+		pop();
 	}
 	image(hud, 0, 0, windowWidth, windowHeight);
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
@@ -230,6 +247,13 @@ function keyTyped() {
 }
 
 function keyPressed() {
+	if (keyCode === ESCAPE) {
+		if (gamePaused) {
+			gamePaused = false;
+		} else {
+			gamePaused = true;
+		}
+	}
 	if (keyCode === UP_ARROW) {
 		if (debug.enabled) {
 			debug.enabled = false;
@@ -299,17 +323,18 @@ function mousePressed() {
 			}
 		}
 	}
-
-	if (!player.dead) {
-		if (pistol.equipped) {
-			if (pistol.ammoClip > 0) {
-				if (!pistol.reloading) {
-					bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
-					pistol.ammoClip--;
+	if (!gamePaused) {
+		if (!player.dead) {
+			if (pistol.equipped) {
+				if (pistol.ammoClip > 0) {
+					if (!pistol.reloading) {
+						bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+						pistol.ammoClip--;
+					}
 				}
-			}
-			if (pistol.ammoClip == 0) {
-				pistol.reload();
+				if (pistol.ammoClip == 0) {
+					pistol.reload();
+				}
 			}
 		}
 	}

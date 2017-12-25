@@ -8,13 +8,12 @@ function Enemy() {
 
   this.update = function() {
     // Ai
-
-  }
-
-  this.show = function() {
     this.targetX = player.pos.x;
     this.targetY = player.pos.y;
     this.bearing = PI / 2 + atan2(player.pos.y-this.pos.y, player.pos.x-this.pos.x);
+  }
+
+  this.show = function() {
     // Main player
     push();
     stroke(0);

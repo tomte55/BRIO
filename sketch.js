@@ -287,7 +287,7 @@ function mousePressed() {
 	if (pistol.equipped) {
 		if (pistol.ammoClip > 0) {
 			if (!pistol.reloading) {
-				bullets.push(new Bullet(player.x, player.y, player.bearing, pistol.damage));
+				bullets.push(new Bullet(player.x, player.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
 				pistol.ammoClip--;
 			}
 		}

@@ -9,7 +9,7 @@ function Pistol() {
 
   this.damage = 10;
 
-  this.equipped = false;
+  this.equipped = true;
 
   this.reloading = false;
 

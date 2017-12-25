@@ -17,9 +17,15 @@ function Missile(x, y, angle, damage) {
       this.released = true;
     }
 
-    this.vel = p5.Vector.fromAngle(PI / 2 + this.targetAngle); // Set velocity towards player
+    if (!player.dead) {
+      this.vel = p5.Vector.fromAngle(PI / 2 + this.targetAngle); // Set velocity towards player
+    }
 
     this.targetAngle = PI / 2 + atan2(player.pos.y-this.pos.y, player.pos.x-this.pos.x); // Set angle in the opposite direction of travel to fire particles
+
+    if (this.pos.x < 0 || this.pos.x > width ||this.pos.y < 0 || this.pos.y > height) {
+      this.explode();
+    }
   }
 
   this.show = function() {
@@ -27,7 +33,9 @@ function Missile(x, y, angle, damage) {
     this.lifeLength ++;
     push();
     stroke(255, 0, 0, 50);
-    line(this.pos.x, this.pos.y, player.pos.x, player.pos.y); // Laser that point to player
+    if (!player.dead) {
+      line(this.pos.x, this.pos.y, player.pos.x, player.pos.y); // Laser that point to player
+    }
     translate(this.pos.x, this.pos.y);
     rotate(this.targetAngle);
     stroke(0);

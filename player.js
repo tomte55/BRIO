@@ -40,22 +40,30 @@ function Player() {
 
     // Walk up
     if (keyIsDown(87)) {
-      this.pos.y -= this.moveSpeed;
+      if (dist(0, this.pos.y, 0, 0) > this.r) {
+        this.pos.y -= this.moveSpeed;
+      }
     }
 
     // Walk down
     if (keyIsDown(83)) {
-      this.pos.y += this.moveSpeed;
+      if (dist(0, this.pos.y, 0, height) > this.r) {
+        this.pos.y += this.moveSpeed;
+      }
     }
 
     // Walk right
     if (keyIsDown(68)) {
-      this.pos.x += this.moveSpeed;
+      if (dist(this.pos.x, 0, width, 0) > this.r) {
+        this.pos.x += this.moveSpeed;
+      }
     }
 
     // Walk left
     if (keyIsDown(65)) {
-      this.pos.x -= this.moveSpeed;
+      if (dist(this.pos.x, 0, 0, 0) > this.r) {
+        this.pos.x -= this.moveSpeed;
+      }
     }
   }
 

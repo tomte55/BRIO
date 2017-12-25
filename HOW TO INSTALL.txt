@@ -1,0 +1,5 @@
+Step 1: Go into Install folder
+Step 2: Start Node.bat as ADMIN
+Step 3: Run the downloaded file
+Step 4: Start http server.bat as ADMIN
+Step 5: Game is ready to start run Start BRIO.bat admin not needed

@@ -36,14 +36,16 @@ function Missile(x, y, angle, damage) {
     rotate(this.targetAngle);
     stroke(0);
     fill(255);
-    if (debug) {
+    rect(0, 0, 5, 15);
+    if (debug.collider) {
+      noFill();
       ellipse(0, 0, this.r);
     }
-    rect(0, 0, 5, 15);
     pop();
   }
 
   this.explode = function() {
     explosions.push(new Explosion(this.pos.x, this.pos.y));
+    this.dead = true;
   }
 }

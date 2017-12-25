@@ -19,7 +19,8 @@ function Bullet(x, y, angle, damage) {
 
   this.show = function() {
     push();
-    if (debug) {
+    if (debug.collider) {
+      noFill();
       ellipse(this.pos.x, this.pos.y, this.r);
     }
     fill(255, 200, 0);

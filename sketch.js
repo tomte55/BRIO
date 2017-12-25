@@ -1,4 +1,14 @@
-var debug = false;
+
+// Debug options
+var debug = {
+	enabled: false,
+	ammo: false,
+	health: false,
+	stamina: false,
+	collider: false,
+	objects: false,
+	optimization: false
+};
 
 // Arrays
 bullets = [];
@@ -7,8 +17,17 @@ ammoBoxes = [];
 fires = [];
 explosions = [];
 enemies = [];
+windows = [];
+
+function checkMouse(x, y, xs, ys) {
+  // Checks if mouse is inside a rectangle
+  if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
+    return true;
+  }
+}
 
 function preload() {
+	// Load all assets
 	myFont = loadFont("Assets/Fonts/Pixel.ttf");
 	hud = loadImage("Assets/IngameO.png");
 	ak47 = loadImage("Assets/ak47.png");
@@ -26,13 +45,12 @@ function setup() {
 	rectMode(CENTER);
 	ellipseMode(RADIUS);
 	cursor(CROSS);
-
-	ammoBoxes.push(new AmmoBox());
 }
 
 function draw() {
 	background(150);
 
+	// If window is not in focus set the fps to 1 so its almost paused
 	if (!focused) {
 		frameRate(1);
 	} else {
@@ -41,10 +59,11 @@ function draw() {
 
 	for (var i = 0; i < ammoBoxes.length; i++) {
 		ammoBoxes[i].show();
+
 		if (dist(player.x, player.y, ammoBoxes[i].x, ammoBoxes[i].y) < player.r+ammoBoxes[i].r) {
 			if (ammoBoxes[i].type == "secondary") {
-				pistol.addAmmo();
-			}
+				pistol.addAmmo(); // If player walks over ammobox of type "secondary" add secondary ammo
+			}                   // Then remove corresponding ammobox
 			ammoBoxes.splice(i, 1);
 		}
 	}
@@ -65,7 +84,7 @@ function draw() {
 	} else {
 		textSize(50);
 		fill(0);
-		text("Dead!", width/2, height/3);
+		text("Dead!", width/2, height/3); // If player is dead show dead text on screen
 		fill(255);
 		textSize(12);
 	}
@@ -77,8 +96,10 @@ function draw() {
 	pistol.show();
 	pistol.update();
 
-	if (keyIsDown(27)) {
-		ammoBoxes.push(new AmmoBox());
+	if (debug.enabled) {
+		if (keyIsDown(27)) {
+			ammoBoxes.push(new AmmoBox());
+		}
 	}
 
 	for (var i = 0; i < bullets.length; i++) {
@@ -87,7 +108,7 @@ function draw() {
 
 		for (var j = 0; j < enemies.length; j++) {
 			if (dist(bullets[i].pos.x, bullets[i].pos.y, enemies[j].x, enemies[j].y) < bullets[i].r+enemies[j].r) {
-				enemies[j].health -= bullets[i].damage;
+				enemies[j].health -= bullets[i].damage; // If bullet hits enemy remove remove health and remove bullet
 				bullets[i].dead = true;
 			}
 		}
@@ -100,8 +121,10 @@ function draw() {
 	for (var i = 0; i < fires.length; i++) {
 		fires[i].update();
 		fires[i].show();
-		if (fires.length > 800) {
-			fires.splice(i, 1);
+		if (!debug.optimization) {
+			if (fires.length > 800) {
+				fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
+			}
 		}
 		if (fires[i].fade < 0) {
 			fires.splice(i, 1);
@@ -117,35 +140,31 @@ function draw() {
 		missiles[i].update();
 
 		if (missiles[i].lifeLength > 1000) {
-			missiles[i].explode();
-			missiles[i].dead = true;
+			missiles[i].explode(); // If missile has been alive for too long make it explode
 		}
 
 		for (var j = 0; j < bullets.length; j++) {
 			if (dist(bullets[j].pos.x, bullets[j].pos.y, missiles[i].pos.x, missiles[i].pos.y) < bullets[j].r+missiles[i].r) {
-				missiles[i].health -= bullets[j].damage;
+				missiles[i].health -= bullets[j].damage; // If bullet hits a missile remove some health from the missiles and remove the bullet
 				bullets[j].dead = true;
 			}
 		}
 
 		if (missiles[i].health <= 0) {
 			missiles[i].explode();
-			missiles[i].dead = true;
 			ammoBoxes.push(new AmmoBox());
 			ammoBoxes.push(new AmmoBox());
 		}
 
 		if (dist(missiles[i].pos.x, missiles[i].pos.y, player.x, player.y) < player.r+missiles[i].r) {
+			player.health -= missiles[i].damage; // If missile hits player remove health from player and explode missile
 			missiles[i].explode();
-			player.health -= missiles[i].damage;
-			missiles[i].dead = true;
 		}
 		for (var j = 0; j < enemies.length; j++) {
 			if (dist(missiles[i].pos.x, missiles[i].pos.y, enemies[j].x, enemies[j].y) < enemies[j].r+missiles[i].r) {
 				if (missiles[i].lifeLength > 45) {
+					enemies[j].health -= missiles[i].damage;  // If missiles hits enemy ramove health from enemy and explode missile
 					missiles[i].explode();
-					enemies[j].health -= missiles[i].damage;
-					missiles[i].dead = true;
 				}
 			}
 		}
@@ -160,18 +179,23 @@ function draw() {
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);
 
+	for (var i = 0; i < windows.length; i++) {
+		windows[i].update();
+		windows[i].show();
+	}
+
 	textSize(18);
 	if (frameRate() < 50) {
 		fill(255, 0, 0);
 	} else {
 		fill(0, 255, 0);
 	}
-	text("FPS: " + int(frameRate()), 35, 20);
+	text("FPS: " + int(frameRate()), 35, 20);	// Draw fps counter and make it green if fps above 50
 	fill(255);
 
-	if (debug) {
+	if (debug.enabled) {
 		fill(255, 0, 0);
-		text("Debug Mode", 55, 40);
+		text("Debug Mode", 55, 40); // If debug mode enabled print it in red text
 		fill(255);
 	}
 }
@@ -180,7 +204,7 @@ function keyTyped() {
 	if (key === ' ') {
 		for (var i = 0; i < enemies.length; i++) {
 			if (!enemies[i].dead) {
-				missiles.push(new Missile(enemies[i].x, enemies[i].y, enemies[i].bearing, pistol.damage));
+				missiles.push(new Missile(enemies[i].x, enemies[i].y, enemies[i].bearing, pistol.damage)); // If space is pressed spawn a missile at every enemy
 			}
 		}
 	}
@@ -189,15 +213,75 @@ function keyTyped() {
 
 function keyPressed() {
 	if (keyCode === UP_ARROW) {
-		if (debug) {
-			debug = false;
-		} else {
-			debug = true;
+		if (debug.enabled) {
+			debug.enabled = false;
+			windows.splice(0, 1);
+		} else {	// Open or close debug menu
+			debug.enabled = true;
+			windows.push(new Window());
+		}
+	}
+}
+
+function mouseDragged() {
+	for (var i = 0; i < windows.length; i++) {
+		if (checkMouse(windows[i].x, windows[i].y, windows[i].xs, windows[i].ys)) {
+			windows[i].x = mouseX + offsetX;
+			windows[i].y = mouseY + offsetY;
 		}
 	}
 }
 
 function mousePressed() {
+	for (var i = 0; i < windows.length; i++) {
+		offsetX = windows[i].x - mouseX;
+		offsetY = windows[i].y - mouseY;
+
+		// Health debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45, 20, 20)) {
+			if (debug.health) {
+				debug.health = false;
+			} else {
+				debug.health = true;
+			}
+		}
+		// Stamina debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*2, 20, 20)) {
+			if (debug.stamina) {
+				debug.stamina = false;
+			} else {
+				debug.stamina = true;
+			}
+		}
+
+		// Collider debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*3, 20, 20)) {
+			if (debug.collider) {
+				debug.collider = false;
+			} else {
+				debug.collider = true;
+			}
+		}
+
+		// Ammo debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*4, 20, 20)) {
+			if (debug.ammo) {
+				debug.ammo = false;
+			} else {
+				debug.ammo = true;
+			}
+		}
+
+		// Optimization debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*5, 20, 20)) {
+			if (debug.optimization) {
+				debug.optimization = false;
+			} else {
+				debug.optimization = true;
+			}
+		}
+	}
+
 	if (!player.dead)
 	if (pistol.equipped) {
 		if (pistol.ammoClip > 0) {

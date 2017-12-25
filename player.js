@@ -1,6 +1,5 @@
 function Player() {
-  this.x = width/2;
-  this.y = height/2;
+  this.pos = createVector(width/2, height/2);
   this.r = 20;
 
   this.moveSpeed = 5;
@@ -13,7 +12,7 @@ function Player() {
   this.dead = false;
 
   this.update = function() {
-    this.bearing = PI / 2 + atan2(mouseY-this.y, mouseX-this.x); // Angle towards mouse position
+    this.bearing = PI / 2 + atan2(mouseY-this.pos.y, mouseX-this.pos.x); // Angle towards mouse position
 
     if (debug.stamina) {
       this.stamina = 100; // Infinite stamina
@@ -41,22 +40,22 @@ function Player() {
 
     // Walk up
     if (keyIsDown(87)) {
-      this.y -= this.moveSpeed;
+      this.pos.y -= this.moveSpeed;
     }
 
     // Walk down
     if (keyIsDown(83)) {
-      this.y += this.moveSpeed;
+      this.pos.y += this.moveSpeed;
     }
 
     // Walk right
     if (keyIsDown(68)) {
-      this.x += this.moveSpeed;
+      this.pos.x += this.moveSpeed;
     }
 
     // Walk left
     if (keyIsDown(65)) {
-      this.x -= this.moveSpeed;
+      this.pos.x -= this.moveSpeed;
     }
   }
 
@@ -64,7 +63,7 @@ function Player() {
 
     // Main player
     push();
-    translate(this.x, this.y);
+    translate(this.pos.x, this.pos.y);
     rotate(this.bearing);
     if (debug.collider) {
       noFill();
@@ -107,11 +106,11 @@ function Player() {
     rectMode(CENTER);
 
     // Draw pickup text and equip
-    if (dist(this.x, this.y, pistol.x, pistol.y) < 15+this.r) {
+    if (dist(this.pos.x, this.pos.y, pistol.pos.x, pistol.pos.y) < 15+this.r) {
       textAlign(CENTER);
       if (!pistol.equipped) {
         fill(0);
-        text("Press F", this.x, this.y+35); // If player is near the gun show pickup text
+        text("Press F", this.pos.x, this.pos.y+35); // If player is near the gun show pickup text
       }
       fill(255);
       if (keyIsDown(70)) {

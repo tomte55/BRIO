@@ -1,6 +1,5 @@
 function Pistol() {
-  this.x = player.x;
-  this.y = player.y;
+  this.pos = createVector(player.pos.x, player.pos.y);
   this.size = 1;
 
   this.ammoPool = 50;
@@ -33,14 +32,14 @@ function Pistol() {
   this.show = function() {
     if (debug.collider) {
       noFill();
-      ellipse(this.x, this.y, 15); // Collider sphere
+      ellipse(this.pos.x, this.pos.y, 15); // Collider sphere
     }
 
     push();
     fill(60, 150, 50);
     strokeWeight(1);
     if (!this.equipped) {
-      rect(this.x, this.y, 20*this.size, 5*this.size); // Show weapon when on ground
+      rect(this.pos.x, this.pos.y, 20*this.size, 5*this.size); // Show weapon when on ground
     }
     strokeWeight(2);
     fill(255);

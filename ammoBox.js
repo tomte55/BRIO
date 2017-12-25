@@ -1,6 +1,5 @@
 function AmmoBox() {
-  this.x = int(random(width));
-  this.y = int(random(height));
+  this.pos = createVector(random(width), random(height));
   this.r = 15;
 
   this.types = ["primary", "secondary"]; // Ammo types
@@ -11,7 +10,7 @@ function AmmoBox() {
   this.show = function() {
     push();
     strokeWeight(1);
-    translate(this.x, this.y);
+    translate(this.pos.x, this.pos.y);
     if (debug.collider) {
       noFill();
       ellipse(0, 0, this.r); // Sphere Collider

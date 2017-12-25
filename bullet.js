@@ -11,7 +11,7 @@ function Bullet(x, y, angle, damage) {
     this.pos.x += -this.vel.x*10;
     this.pos.y += -this.vel.y*10;
 
-    if (this.x > width || this.x < 0 || this.y > height || this.y < 0) {
+    if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
       this.dead = true; // Remove bullet if outside window
     }
   }

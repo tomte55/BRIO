@@ -7,8 +7,8 @@ function Fire(x, y, r1=5, r2=10, angle) {
   this.radius = random(r1, r2);
 
   this.fade = 255;
-  this.g = random(100, 200);
-  this.r = 255;
+  this.g = random(100, 200); // Green color
+  this.r = 255; // Red color
 
   this.update = function() {
     this.pos.x += this.vel.x/2;
@@ -20,9 +20,9 @@ function Fire(x, y, r1=5, r2=10, angle) {
     translate(this.pos.x, this.pos.y);
     strokeWeight(0);
     fill(this.r, this.g, 0, this.fade);
-    ellipse(0, 0, this.radius);
+    ellipse(0, 0, this.radius); // Actuall fire particle
+    
     this.fade -= 3;
-
     this.r -= 3;
     this.g -= 3;
     this.radius += 0.2;

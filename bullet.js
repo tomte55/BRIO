@@ -1,5 +1,4 @@
 function Bullet(x, y, angle, damage) {
-
   this.pos = createVector(x, y);
   this.vel = p5.Vector.fromAngle(PI / 2 + angle);
   this.r = 5;
@@ -12,8 +11,8 @@ function Bullet(x, y, angle, damage) {
     this.pos.x += -this.vel.x*10;
     this.pos.y += -this.vel.y*10;
 
-    if (this.x > width || this.x < 0 || this.y > height || this.y < 0) {
-      this.dead = true;
+    if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
+      this.dead = true; // Remove bullet if outside window
     }
   }
 
@@ -21,11 +20,11 @@ function Bullet(x, y, angle, damage) {
     push();
     if (debug.collider) {
       noFill();
-      ellipse(this.pos.x, this.pos.y, this.r);
+      ellipse(this.pos.x, this.pos.y, this.r); // Sphere collider
     }
     fill(255, 200, 0);
     strokeWeight(0);
-    rect(this.pos.x, this.pos.y, 5, 5);
+    rect(this.pos.x, this.pos.y, 5, 5); // Actuall bullet
     pop();
   }
 }

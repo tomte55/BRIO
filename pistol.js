@@ -1,6 +1,5 @@
 function Pistol() {
-  this.x = player.x;
-  this.y = player.y;
+  this.pos = createVector(player.pos.x, player.pos.y);
   this.size = 1;
 
   this.ammoPool = 50;
@@ -9,13 +8,13 @@ function Pistol() {
 
   this.damage = 10;
 
-  this.equipped = false;
+  this.equipped = true;
 
   this.reloading = false;
 
   this.update = function() {
     if (debug.ammo) {
-      this.ammoClip = 10;
+      this.ammoClip = 10; // Infinite ammo
     }
 
     if (this.reloading) {
@@ -31,13 +30,16 @@ function Pistol() {
   }
 
   this.show = function() {
-    // fill(0, 0, 0, 100);
-    // ellipse(this.x, this.y, 15);
+    if (debug.collider) {
+      noFill();
+      ellipse(this.pos.x, this.pos.y, 15); // Collider sphere
+    }
+
     push();
     fill(60, 150, 50);
     strokeWeight(1);
     if (!this.equipped) {
-      rect(this.x, this.y, 20*this.size, 5*this.size);
+      rect(this.pos.x, this.pos.y, 20*this.size, 5*this.size); // Show weapon when on ground
     }
     strokeWeight(2);
     fill(255);

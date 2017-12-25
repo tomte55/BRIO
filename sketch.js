@@ -1,4 +1,11 @@
-var debug = false;
+var debug = {
+	enabled: false,
+	ammo: false,
+	health: false,
+	stamina: false,
+	collider: false,
+	objects: false
+};
 
 // Arrays
 bullets = [];
@@ -7,6 +14,14 @@ ammoBoxes = [];
 fires = [];
 explosions = [];
 enemies = [];
+windows = [];
+
+function checkMouse(x, y, xs, ys) {
+  // Checks if mouse is inside a rectangle
+  if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
+    return true;
+  }
+}
 
 function preload() {
 	myFont = loadFont("Assets/Fonts/Pixel.ttf");
@@ -160,6 +175,11 @@ function draw() {
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);
 
+	for (var i = 0; i < windows.length; i++) {
+		windows[i].update();
+		windows[i].show();
+	}
+
 	textSize(18);
 	if (frameRate() < 50) {
 		fill(255, 0, 0);
@@ -169,7 +189,7 @@ function draw() {
 	text("FPS: " + int(frameRate()), 35, 20);
 	fill(255);
 
-	if (debug) {
+	if (debug.enabled) {
 		fill(255, 0, 0);
 		text("Debug Mode", 55, 40);
 		fill(255);
@@ -189,15 +209,66 @@ function keyTyped() {
 
 function keyPressed() {
 	if (keyCode === UP_ARROW) {
-		if (debug) {
-			debug = false;
+		if (debug.enabled) {
+			debug.enabled = false;
+			windows.splice(0, 1);
 		} else {
-			debug = true;
+			debug.enabled = true;
+			windows.push(new Window());
+		}
+	}
+}
+
+function mouseDragged() {
+	for (var i = 0; i < windows.length; i++) {
+		if (checkMouse(windows[i].x, windows[i].y, windows[i].xs, windows[i].ys)) {
+			windows[i].x = mouseX + offsetX;
+			windows[i].y = mouseY + offsetY;
 		}
 	}
 }
 
 function mousePressed() {
+	for (var i = 0; i < windows.length; i++) {
+		offsetX = windows[i].x - mouseX;
+		offsetY = windows[i].y - mouseY;
+
+		// Health debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45, 20, 20)) {
+			if (debug.health) {
+				debug.health = false;
+			} else {
+				debug.health = true;
+			}
+		}
+		// Stamina debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*2, 20, 20)) {
+			if (debug.stamina) {
+				debug.stamina = false;
+			} else {
+				debug.stamina = true;
+			}
+		}
+
+		// Collider debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*3, 20, 20)) {
+			if (debug.collider) {
+				debug.collider = false;
+			} else {
+				debug.collider = true;
+			}
+		}
+
+		// Ammo debug
+		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*4, 20, 20)) {
+			if (debug.ammo) {
+				debug.ammo = false;
+			} else {
+				debug.ammo = true;
+			}
+		}
+	}
+
 	if (!player.dead)
 	if (pistol.equipped) {
 		if (pistol.ammoClip > 0) {

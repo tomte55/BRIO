@@ -14,6 +14,10 @@ function Pistol() {
   this.reloading = false;
 
   this.update = function() {
+    if (debug.ammo) {
+      this.ammoClip = 10;
+    }
+
     if (this.reloading) {
       if (this.ammoPool > 0) {
         if (this.ammoClip < this.maxClip) {

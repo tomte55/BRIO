@@ -2,7 +2,7 @@ function Enemy() {
   this.x = random(width);
   this.y = random(height);
   this.bearing = 0;
-  this.r = 15;
+  this.r = 20;
 
   this.health = 100;
   this.dead = false;
@@ -21,7 +21,8 @@ function Enemy() {
     stroke(0);
     translate(this.x, this.y);
     rotate(this.bearing);
-    if (debug) {
+    if (debug.collider) {
+      noFill();
       ellipse(0, 0, this.r) // Sphere Collider
     }
     fill(this.health, this.health, this.health);

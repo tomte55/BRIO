@@ -1,7 +1,7 @@
 function Player() {
   this.x = width/2;
   this.y = height/2;
-  this.r = 15;
+  this.r = 20;
 
   this.moveSpeed = 5;
   this.fade = 0; // Stamina bar fade
@@ -16,8 +16,11 @@ function Player() {
   this.update = function() {
     this.bearing = PI / 2 + atan2(mouseY-this.y, mouseX-this.x);
 
-    if (debug) {
+    if (debug.stamina) {
       this.stamina = 100;
+    }
+    if (debug.health) {
+      this.health = 100;
     }
 
     // Sprint Function
@@ -66,9 +69,11 @@ function Player() {
     push();
     translate(this.x, this.y);
     rotate(this.bearing);
-    if (debug) {
+    if (debug.collider) {
+      noFill();
       ellipse(0, 0, this.r) // Sphere Collider
     }
+    fill(255);
     triangle(0, -15, 15, 15, -15, 15);
 
     if (pistol.equipped) {

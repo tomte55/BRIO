@@ -12,20 +12,24 @@ function Pistol() {
 
   this.reloading = false;
 
+  this.reloadTime = 0;
+
+
   this.update = function() {
     if (debug.ammo) {
       this.ammoClip = 10; // Infinite ammo
     }
 
     if (this.reloading) {
-      if (this.ammoPool > 0) {
-        if (this.ammoClip < this.maxClip) {
-          this.ammoClip += 1;
-          this.ammoPool -= 1;
-        } else {
-          this.reloading = false;
-        }
+      this.reloadTime++;
+    }
+    if (this.reloadTime > 100) {
+      this.reloadTime = 0;
+      while (this.ammoPool > 0 && this.ammoClip < this.maxClip) {
+        this.ammoClip++;
+        this.ammoPool--;
       }
+      this.reloading = false;
     }
   }
 

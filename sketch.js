@@ -182,6 +182,16 @@ function draw() {
 	}
 
 	// HUD
+	if (pistol.reloading) {
+		strokeWeight(0);
+		rect(player.pos.x, player.pos.y+45, 55, 10, 10);
+		fill(0);
+		rect(player.pos.x, player.pos.y+45, pistol.reloadTime/2, 8, 10);
+		strokeWeight(2);
+		if (debug.enabled) {
+			text(pistol.reloadTime, 500, 485);
+		}
+	}
 	image(hud, 0, 0, windowWidth, windowHeight);
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);

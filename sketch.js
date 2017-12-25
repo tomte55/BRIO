@@ -123,13 +123,16 @@ function draw() {
 	for (var i = 0; i < fires.length; i++) {
 		fires[i].update();
 		fires[i].show();
+		if (fires[i].fade < 0) {
+			fires[i].dead = true;
+		}
+		if (fires[i].dead) {
+			fires.splice(i, 1);
+		}
 		if (!debug.optimization) {
 			if (fires.length > 800) {
 				fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
 			}
-		}
-		if (fires[i].fade < 0) {
-			fires.splice(i, 1);
 		}
 	}
 
@@ -157,16 +160,19 @@ function draw() {
 			ammoBoxes.push(new AmmoBox());
 			ammoBoxes.push(new AmmoBox());
 		}
-
-		if (dist(missiles[i].pos.x, missiles[i].pos.y, player.pos.x, player.pos.y) < player.r+missiles[i].r) {
-			player.health -= missiles[i].damage; // If missile hits player remove health from player and explode missile
-			missiles[i].explode();
+		if (!player.dead) {
+			if (dist(missiles[i].pos.x, missiles[i].pos.y, player.pos.x, player.pos.y) < player.r+missiles[i].r) {
+				player.health -= missiles[i].damage; // If missile hits player remove health from player and explode missile
+				missiles[i].explode();
+			}
 		}
 		for (var j = 0; j < enemies.length; j++) {
-			if (dist(missiles[i].pos.x, missiles[i].pos.y, enemies[j].pos.x, enemies[j].pos.y) < enemies[j].r+missiles[i].r) {
-				if (missiles[i].lifeLength > 45) {
-					enemies[j].health -= missiles[i].damage;  // If missiles hits enemy ramove health from enemy and explode missile
-					missiles[i].explode();
+			if (!enemies[j].dead) {
+				if (dist(missiles[i].pos.x, missiles[i].pos.y, enemies[j].pos.x, enemies[j].pos.y) < enemies[j].r+missiles[i].r) {
+					if (missiles[i].lifeLength > 45) {
+						enemies[j].health -= missiles[i].damage;  // If missiles hits enemy ramove health from enemy and explode missile
+						missiles[i].explode();
+					}
 				}
 			}
 		}
@@ -177,6 +183,16 @@ function draw() {
 	}
 
 	// HUD
+	if (pistol.reloading) {
+		strokeWeight(0);
+		rect(player.pos.x, player.pos.y+45, 55, 10, 10);
+		fill(0);
+		rect(player.pos.x, player.pos.y+45, pistol.reloadTime/2, 8, 10);
+		strokeWeight(2);
+		if (debug.enabled) {
+			text(pistol.reloadTime, 500, 485);
+		}
+	}
 	image(hud, 0, 0, windowWidth, windowHeight);
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);
@@ -284,16 +300,17 @@ function mousePressed() {
 		}
 	}
 
-	if (!player.dead)
-	if (pistol.equipped) {
-		if (pistol.ammoClip > 0) {
-			if (!pistol.reloading) {
-				bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
-				pistol.ammoClip--;
+	if (!player.dead) {
+		if (pistol.equipped) {
+			if (pistol.ammoClip > 0) {
+				if (!pistol.reloading) {
+					bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+					pistol.ammoClip--;
+				}
 			}
-		}
-		if (pistol.ammoClip == 0) {
-			pistol.reload();
+			if (pistol.ammoClip == 0) {
+				pistol.reload();
+			}
 		}
 	}
 }

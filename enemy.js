@@ -1,8 +1,16 @@
 function Enemy() {
-  this.x = 700;
-  this.y = 300;
+  this.x = random(width);
+  this.y = random(height);
   this.bearing = 0;
   this.r = 15;
+
+  this.health = 100;
+  this.dead = false;
+
+  this.update = function() {
+    // Ai
+
+  }
 
   this.show = function() {
     this.targetX = player.x;
@@ -16,8 +24,8 @@ function Enemy() {
     if (debug) {
       ellipse(0, 0, this.r) // Sphere Collider
     }
+    fill(this.health, this.health, this.health);
     triangle(0, -15, 15, 15, -15, 15);
     pop();
   }
-
 }

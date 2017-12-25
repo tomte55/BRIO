@@ -1,5 +1,6 @@
-function Fire(x, y, r1=5, r2=10) {
+function Fire(x, y, r1=5, r2=10, angle) {
   this.pos = createVector(x, y);
+  this.vel = p5.Vector.fromAngle(PI / 2 + angle)
   this.pos.x = x+random(-5, 5);
   this.pos.y = y+random(-5, 5);
 
@@ -8,6 +9,11 @@ function Fire(x, y, r1=5, r2=10) {
   this.fade = 255;
   this.g = random(100, 200);
   this.r = 255;
+
+  this.update = function() {
+    this.pos.x += this.vel.x/2;
+    this.pos.y += this.vel.y/2;
+  }
 
   this.show = function() {
     push();
@@ -19,7 +25,7 @@ function Fire(x, y, r1=5, r2=10) {
 
     this.r -= 3;
     this.g -= 3;
-    this.radius += 0.1;
+    this.radius += 0.2;
     pop();
   }
 }

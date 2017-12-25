@@ -65,6 +65,7 @@ function Player() {
 
   this.show = function() {
 
+
     // Main player
     push();
     translate(this.x, this.y);

@@ -1,4 +1,3 @@
-
 // Debug options
 var debug = {
 	enabled: false,
@@ -49,6 +48,7 @@ function setup() {
 
 function draw() {
 	background(150);
+
 
 	// If window is not in focus set the fps to 1 so its almost paused
 	if (!focused) {

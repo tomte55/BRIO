@@ -26,11 +26,11 @@ function Missile(x, y, angle, damage) {
     if (this.pos.x < 0 || this.pos.x > width ||this.pos.y < 0 || this.pos.y > height) {
       this.explode();
     }
+    fires.push(new Fire(this.pos.x, this.pos.y, 5, 10, this.targetAngle)); // Spawn fire particles
+    this.lifeLength ++;
   }
 
   this.show = function() {
-    fires.push(new Fire(this.pos.x, this.pos.y, 5, 10, this.targetAngle)); // Spawn fire particles
-    this.lifeLength ++;
     push();
     stroke(255, 0, 0, 50);
     if (!player.dead) {

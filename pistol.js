@@ -15,7 +15,7 @@ function Pistol() {
 
   this.update = function() {
     if (debug.ammo) {
-      this.ammoClip = 10;
+      this.ammoClip = 10; // Infinite ammo
     }
 
     if (this.reloading) {
@@ -31,13 +31,16 @@ function Pistol() {
   }
 
   this.show = function() {
-    // fill(0, 0, 0, 100);
-    // ellipse(this.x, this.y, 15);
+    if (debug.collider) {
+      noFill();
+      ellipse(this.x, this.y, 15); // Collider sphere
+    }
+
     push();
     fill(60, 150, 50);
     strokeWeight(1);
     if (!this.equipped) {
-      rect(this.x, this.y, 20*this.size, 5*this.size);
+      rect(this.x, this.y, 20*this.size, 5*this.size); // Show weapon when on ground
     }
     strokeWeight(2);
     fill(255);

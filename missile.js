@@ -11,41 +11,37 @@ function Missile(x, y, angle, damage) {
   this.lifeLength = 0;
 
   this.update = function() {
-    if (this.lifeLength > 30) {
+    if (this.lifeLength > 30) { // Make it wait some time before flying
       this.pos.x += -this.vel.x*this.speed;
       this.pos.y += -this.vel.y*this.speed;
       this.released = true;
     }
 
-    this.vel = p5.Vector.fromAngle(PI / 2 + this.targetAngle);
+    this.vel = p5.Vector.fromAngle(PI / 2 + this.targetAngle); // Set velocity towards player
 
-    this.targetAngle = PI / 2 + atan2(player.y-this.pos.y, player.x-this.pos.x);
-
-    if (this.x > width || this.x < 0 || this.y > height || this.y < 0) {
-      this.dead = true;
-    }
+    this.targetAngle = PI / 2 + atan2(player.y-this.pos.y, player.x-this.pos.x); // Set angle in the opposite direction of travel to fire particles
   }
 
   this.show = function() {
-    fires.push(new Fire(this.pos.x, this.pos.y, 5, 10, this.targetAngle));
+    fires.push(new Fire(this.pos.x, this.pos.y, 5, 10, this.targetAngle)); // Spawn fire particles
     this.lifeLength ++;
     push();
     stroke(255, 0, 0, 50);
-    line(this.pos.x, this.pos.y, player.x, player.y);
+    line(this.pos.x, this.pos.y, player.x, player.y); // Laser that point to player
     translate(this.pos.x, this.pos.y);
     rotate(this.targetAngle);
     stroke(0);
     fill(255);
-    rect(0, 0, 5, 15);
+    rect(0, 0, 5, 15); // Actuall missile
     if (debug.collider) {
       noFill();
-      ellipse(0, 0, this.r);
+      ellipse(0, 0, this.r); // Collider sphere
     }
     pop();
   }
 
   this.explode = function() {
-    explosions.push(new Explosion(this.pos.x, this.pos.y));
-    this.dead = true;
+    explosions.push(new Explosion(this.pos.x, this.pos.y)); // Spawn explosion effect
+    this.dead = true; // And kill the missile
   }
 }

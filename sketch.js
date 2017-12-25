@@ -1,4 +1,3 @@
-
 // Debug options
 var debug = {
 	enabled: false,
@@ -20,10 +19,10 @@ enemies = [];
 windows = [];
 
 function checkMouse(x, y, xs, ys) {
-  // Checks if mouse is inside a rectangle
-  if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
-    return true;
-  }
+	// Checks if mouse is inside a rectangle
+	if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
+		return true;
+	}
 }
 
 function preload() {
@@ -107,9 +106,11 @@ function draw() {
 		bullets[i].show();
 
 		for (var j = 0; j < enemies.length; j++) {
-			if (dist(bullets[i].pos.x, bullets[i].pos.y, enemies[j].x, enemies[j].y) < bullets[i].r+enemies[j].r) {
-				enemies[j].health -= bullets[i].damage; // If bullet hits enemy remove remove health and remove bullet
-				bullets[i].dead = true;
+			if (!enemies[j].dead) {
+				if (dist(bullets[i].pos.x, bullets[i].pos.y, enemies[j].x, enemies[j].y) < bullets[i].r+enemies[j].r) {
+					enemies[j].health -= bullets[i].damage; // If bullet hits enemy remove health and remove bullet
+					bullets[i].dead = true;
+				}
 			}
 		}
 

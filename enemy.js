@@ -26,7 +26,7 @@ function Enemy() {
       ellipse(0, 0, this.r) // Sphere Collider
     }
     fill(this.health, this.health, this.health);
-    triangle(0, -15, 15, 15, -15, 15);
+    triangle(0, -15, 15, 15, -15, 15); // Actuall enemy
     pop();
   }
 }

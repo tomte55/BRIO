@@ -93,7 +93,6 @@ function Player() {
     fill(0);
     textAlign(CENTER);
     textSize(15);
-    textFont(myFont)
     text(pistol.ammoClip + " / " + pistol.ammoPool, 208, height-6);
     pop();
 

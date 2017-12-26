@@ -19,6 +19,7 @@ enemies = [];
 windows = [];
 
 var gamePaused = false;
+var optimize = false;
 
 function checkMouse(x, y, xs, ys) {
 	// Checks if mouse is inside a rectangle
@@ -51,6 +52,12 @@ function setup() {
 function draw() {
 	background(150);
 
+	if (frameRate() < 50) {
+		optimize = true;
+	} else {
+		optimize = false;
+	}
+
 	for (var i = 0; i < ammoBoxes.length; i++) {
 		ammoBoxes[i].show();
 
@@ -61,6 +68,7 @@ function draw() {
 			ammoBoxes.splice(i, 1);
 		}
 	}
+
 	for (var i = 0; i < enemies.length; i++) {
 		if (!enemies[i].dead) {
 			if (!gamePaused) {
@@ -72,7 +80,6 @@ function draw() {
 			enemies[i].dead = true;
 		}
 	}
-
 
 	if (!player.dead) {
 		if (!gamePaused) {
@@ -90,9 +97,11 @@ function draw() {
 	if (player.health <= 0) {
 		player.dead = true;
 	}
+
 	if (!gamePaused) {
 		pistol.update();
 	}
+
 	pistol.show();
 
 	for (var i = 0; i < bullets.length; i++) {
@@ -127,8 +136,10 @@ function draw() {
 			fires.splice(i, 1);
 		}
 		if (!debug.optimization) {
-			if (fires.length > 800) {
-				fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
+			if (optimize) {
+				if (fires.length > 800) {
+					fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
+				}
 			}
 		}
 	}

@@ -95,12 +95,6 @@ function draw() {
 	}
 	pistol.show();
 
-	if (debug.enabled) {
-		if (keyIsDown(27)) {
-			ammoBoxes.push(new AmmoBox());
-		}
-	}
-
 	for (var i = 0; i < bullets.length; i++) {
 		if (!gamePaused) {
 			bullets[i].update();
@@ -217,6 +211,10 @@ function draw() {
 	for (var i = 0; i < windows.length; i++) {
 		windows[i].update();
 		windows[i].show();
+		if (windows[i].dragging) {
+			windows[i].pos.x = mouseX + offsetX;
+			windows[i].pos.y = mouseY + offsetY;
+		}
 	}
 
 	textSize(18);
@@ -265,12 +263,9 @@ function keyPressed() {
 	}
 }
 
-function mouseDragged() {
+function mouseReleased() {
 	for (var i = 0; i < windows.length; i++) {
-		if (checkMouse(windows[i].pos.x, windows[i].pos.y, windows[i].xs, windows[i].ys)) {
-			windows[i].pos.x = mouseX + offsetX;
-			windows[i].pos.y = mouseY + offsetY;
-		}
+		windows[i].dragging = false;
 	}
 }
 
@@ -278,6 +273,9 @@ function mousePressed() {
 	for (var i = 0; i < windows.length; i++) {
 		offsetX = windows[i].pos.x - mouseX;
 		offsetY = windows[i].pos.y - mouseY;
+		if (checkMouse(windows[i].pos.x, windows[i].pos.y-windows[i].ys/2+10, windows[i].xs, 20)) {
+			windows[i].dragging = true;
+		}
 
 		// Health debug
 		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45, 20, 20)) {
@@ -323,13 +321,24 @@ function mousePressed() {
 			}
 		}
 	}
+
+	// Shoot
 	if (!gamePaused) {
 		if (!player.dead) {
 			if (pistol.equipped) {
 				if (pistol.ammoClip > 0) {
 					if (!pistol.reloading) {
-						bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
-						pistol.ammoClip--;
+						if (windows.length > 0) {
+							for (var i = 0; i < windows.length; i++) {
+								if (!checkMouse(windows[i].pos.x, windows[i].pos.y, windows[i].xs, windows[i].ys)) {
+									bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+									pistol.ammoClip--;
+								}
+							}
+						} else {
+							bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+							pistol.ammoClip--;
+						}
 					}
 				}
 				if (pistol.ammoClip == 0) {

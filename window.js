@@ -3,6 +3,8 @@ function Window() {
   this.xs = 300;
   this.ys = 400;
 
+  this.dragging = false;
+
   this.update = function() {
 
   }

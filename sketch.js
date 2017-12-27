@@ -18,11 +18,14 @@ explosions = [];
 enemies = [];
 windows = [];
 
+var gamePaused = false;
+var optimize = false;
+
 function checkMouse(x, y, xs, ys) {
-  // Checks if mouse is inside a rectangle
-  if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
-    return true;
-  }
+	// Checks if mouse is inside a rectangle
+	if (mouseX >= x-xs/2 && mouseX <= x+xs/2 && mouseY >= y-ys/2 && mouseY <= y+ys/2) {
+		return true;
+	}
 }
 
 function preload() {
@@ -45,27 +48,28 @@ function setup() {
 function draw() {
 	background(150);
 
-
-	// If window is not in focus set the fps to 1 so its almost paused
-	if (!focused) {
-		frameRate(1);
+	if (frameRate() < 50) {
+		optimize = true;
 	} else {
-		frameRate(60);
+		optimize = false;
 	}
 
 	for (var i = 0; i < ammoBoxes.length; i++) {
 		ammoBoxes[i].show();
 
-		if (dist(player.x, player.y, ammoBoxes[i].x, ammoBoxes[i].y) < player.r+ammoBoxes[i].r) {
+		if (dist(player.pos.x, player.pos.y, ammoBoxes[i].pos.x, ammoBoxes[i].pos.y) < player.r+ammoBoxes[i].r) {
 			if (ammoBoxes[i].type == "secondary") {
 				pistol.addAmmo(); // If player walks over ammobox of type "secondary" add secondary ammo
 			}                   // Then remove corresponding ammobox
 			ammoBoxes.splice(i, 1);
 		}
 	}
+
 	for (var i = 0; i < enemies.length; i++) {
 		if (!enemies[i].dead) {
-			enemies[i].update();
+			if (!gamePaused) {
+				enemies[i].update();
+			}
 			enemies[i].show();
 		}
 		if (enemies[i].health <= 0) {
@@ -73,10 +77,11 @@ function draw() {
 		}
 	}
 
-
 	if (!player.dead) {
+		if (!gamePaused) {
+			player.update();
+		}
 		player.show();
-		player.update();
 	} else {
 		textSize(50);
 		fill(0);
@@ -89,23 +94,24 @@ function draw() {
 		player.dead = true;
 	}
 
-	pistol.show();
-	pistol.update();
-
-	if (debug.enabled) {
-		if (keyIsDown(27)) {
-			ammoBoxes.push(new AmmoBox());
-		}
+	if (!gamePaused) {
+		pistol.update();
 	}
 
+	pistol.show();
+
 	for (var i = 0; i < bullets.length; i++) {
-		bullets[i].update();
+		if (!gamePaused) {
+			bullets[i].update();
+		}
 		bullets[i].show();
 
 		for (var j = 0; j < enemies.length; j++) {
-			if (dist(bullets[i].pos.x, bullets[i].pos.y, enemies[j].x, enemies[j].y) < bullets[i].r+enemies[j].r) {
-				enemies[j].health -= bullets[i].damage; // If bullet hits enemy remove remove health and remove bullet
-				bullets[i].dead = true;
+			if (!enemies[j].dead) {
+				if (dist(bullets[i].pos.x, bullets[i].pos.y, enemies[j].pos.x, enemies[j].pos.y) < bullets[i].r+enemies[j].r) {
+					enemies[j].health -= bullets[i].damage; // If bullet hits enemy remove health and remove bullet
+					bullets[i].dead = true;
+				}
 			}
 		}
 
@@ -115,15 +121,22 @@ function draw() {
 	}
 
 	for (var i = 0; i < fires.length; i++) {
-		fires[i].update();
-		fires[i].show();
-		if (!debug.optimization) {
-			if (fires.length > 800) {
-				fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
-			}
+		if (!gamePaused) {
+			fires[i].update();
 		}
+		fires[i].show();
 		if (fires[i].fade < 0) {
+			fires[i].dead = true;
+		}
+		if (fires[i].dead) {
 			fires.splice(i, 1);
+		}
+		if (!debug.optimization) {
+			if (optimize) {
+				if (fires.length > 800) {
+					fires.splice(i, 1); // If there are more than 800 fire particles start removing them for optimization
+				}
+			}
 		}
 	}
 
@@ -132,8 +145,10 @@ function draw() {
 	}
 
 	for (var i = 0; i < missiles.length; i++) {
+		if (!gamePaused) {
+			missiles[i].update();
+		}
 		missiles[i].show();
-		missiles[i].update();
 
 		if (missiles[i].lifeLength > 1000) {
 			missiles[i].explode(); // If missile has been alive for too long make it explode
@@ -151,16 +166,19 @@ function draw() {
 			ammoBoxes.push(new AmmoBox());
 			ammoBoxes.push(new AmmoBox());
 		}
-
-		if (dist(missiles[i].pos.x, missiles[i].pos.y, player.x, player.y) < player.r+missiles[i].r) {
-			player.health -= missiles[i].damage; // If missile hits player remove health from player and explode missile
-			missiles[i].explode();
+		if (!player.dead) {
+			if (dist(missiles[i].pos.x, missiles[i].pos.y, player.pos.x, player.pos.y) < player.r+missiles[i].r) {
+				player.health -= missiles[i].damage; // If missile hits player remove health from player and explode missile
+				missiles[i].explode();
+			}
 		}
 		for (var j = 0; j < enemies.length; j++) {
-			if (dist(missiles[i].pos.x, missiles[i].pos.y, enemies[j].x, enemies[j].y) < enemies[j].r+missiles[i].r) {
-				if (missiles[i].lifeLength > 45) {
-					enemies[j].health -= missiles[i].damage;  // If missiles hits enemy ramove health from enemy and explode missile
-					missiles[i].explode();
+			if (!enemies[j].dead) {
+				if (dist(missiles[i].pos.x, missiles[i].pos.y, enemies[j].pos.x, enemies[j].pos.y) < enemies[j].r+missiles[i].r) {
+					if (missiles[i].lifeLength > 45) {
+						enemies[j].health -= missiles[i].damage;  // If missiles hits enemy ramove health from enemy and explode missile
+						missiles[i].explode();
+					}
 				}
 			}
 		}
@@ -172,9 +190,40 @@ function draw() {
 
 	// HUD
 
+	if (pistol.reloading) {
+		strokeWeight(0);
+		rect(player.pos.x, player.pos.y+45, 55, 10, 10);
+		fill(0);
+		rect(player.pos.x, player.pos.y+45, pistol.reloadTime/2, 8, 10);
+		strokeWeight(2);
+		if (debug.enabled) {
+			text(pistol.reloadTime, player.pos.x, player.pos.y+40);
+		}
+	}
+	// If window is not in focus set the fps to 1 so its almost paused
+	if (!focused || gamePaused) {
+		gamePaused = true;
+		push();
+		fill(0);
+		textSize(50);
+		text("Game Paused", width/2, height/2-150);
+		textSize(40);
+		text("Click inside window", width/2, height/2-75);
+		text("And press ESCAPE", width/2, height/2-25);
+		pop();
+	}
+	image(hud, 0, 0, windowWidth, windowHeight);
+	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
+	image(glock, 175, height-50, glock.width-1400, glock.height-950);
+
+
 	for (var i = 0; i < windows.length; i++) {
 		windows[i].update();
 		windows[i].show();
+		if (windows[i].dragging) {
+			windows[i].pos.x = mouseX + offsetX;
+			windows[i].pos.y = mouseY + offsetY;
+		}
 	}
 
 	textSize(18);
@@ -197,7 +246,7 @@ function keyTyped() {
 	if (key === ' ') {
 		for (var i = 0; i < enemies.length; i++) {
 			if (!enemies[i].dead) {
-				missiles.push(new Missile(enemies[i].x, enemies[i].y, enemies[i].bearing, pistol.damage)); // If space is pressed spawn a missile at every enemy
+				missiles.push(new Missile(enemies[i].pos.x, enemies[i].pos.y, enemies[i].bearing, pistol.damage)); // If space is pressed spawn a missile at every enemy
 			}
 		}
 	}
@@ -205,6 +254,13 @@ function keyTyped() {
 }
 
 function keyPressed() {
+	if (keyCode === ESCAPE) {
+		if (gamePaused) {
+			gamePaused = false;
+		} else {
+			gamePaused = true;
+		}
+	}
 	if (keyCode === UP_ARROW) {
 		if (debug.enabled) {
 			debug.enabled = false;
@@ -216,22 +272,22 @@ function keyPressed() {
 	}
 }
 
-function mouseDragged() {
+function mouseReleased() {
 	for (var i = 0; i < windows.length; i++) {
-		if (checkMouse(windows[i].x, windows[i].y, windows[i].xs, windows[i].ys)) {
-			windows[i].x = mouseX + offsetX;
-			windows[i].y = mouseY + offsetY;
-		}
+		windows[i].dragging = false;
 	}
 }
 
 function mousePressed() {
 	for (var i = 0; i < windows.length; i++) {
-		offsetX = windows[i].x - mouseX;
-		offsetY = windows[i].y - mouseY;
+		offsetX = windows[i].pos.x - mouseX;
+		offsetY = windows[i].pos.y - mouseY;
+		if (checkMouse(windows[i].pos.x, windows[i].pos.y-windows[i].ys/2+10, windows[i].xs, 20)) {
+			windows[i].dragging = true;
+		}
 
 		// Health debug
-		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45, 20, 20)) {
+		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45, 20, 20)) {
 			if (debug.health) {
 				debug.health = false;
 			} else {
@@ -239,7 +295,7 @@ function mousePressed() {
 			}
 		}
 		// Stamina debug
-		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*2, 20, 20)) {
+		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45*2, 20, 20)) {
 			if (debug.stamina) {
 				debug.stamina = false;
 			} else {
@@ -248,7 +304,7 @@ function mousePressed() {
 		}
 
 		// Collider debug
-		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*3, 20, 20)) {
+		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45*3, 20, 20)) {
 			if (debug.collider) {
 				debug.collider = false;
 			} else {
@@ -257,7 +313,7 @@ function mousePressed() {
 		}
 
 		// Ammo debug
-		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*4, 20, 20)) {
+		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45*4, 20, 20)) {
 			if (debug.ammo) {
 				debug.ammo = false;
 			} else {
@@ -266,7 +322,7 @@ function mousePressed() {
 		}
 
 		// Optimization debug
-		if (checkMouse(windows[i].x-windows[i].xs/2+20, windows[i].y-windows[i].ys/2+45*5, 20, 20)) {
+		if (checkMouse(windows[i].pos.x-windows[i].xs/2+20, windows[i].pos.y-windows[i].ys/2+45*5, 20, 20)) {
 			if (debug.optimization) {
 				debug.optimization = false;
 			} else {
@@ -275,16 +331,29 @@ function mousePressed() {
 		}
 	}
 
-	if (!player.dead)
-	if (pistol.equipped) {
-		if (pistol.ammoClip > 0) {
-			if (!pistol.reloading) {
-				bullets.push(new Bullet(player.x, player.y, player.bearing, pistol.damage));
-				pistol.ammoClip--;
+	// Shoot
+	if (!gamePaused) {
+		if (!player.dead) {
+			if (pistol.equipped) {
+				if (pistol.ammoClip > 0) {
+					if (!pistol.reloading) {
+						if (windows.length > 0) {
+							for (var i = 0; i < windows.length; i++) {
+								if (!checkMouse(windows[i].pos.x, windows[i].pos.y, windows[i].xs, windows[i].ys)) {
+									bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+									pistol.ammoClip--;
+								}
+							}
+						} else {
+							bullets.push(new Bullet(player.pos.x, player.pos.y, player.bearing, pistol.damage)); // Spawn new bullet at player position
+							pistol.ammoClip--;
+						}
+					}
+				}
+				if (pistol.ammoClip == 0) {
+					pistol.reload();
+				}
 			}
-		}
-		if (pistol.ammoClip == 0) {
-			pistol.reload();
 		}
 	}
 }

@@ -99,6 +99,8 @@ function Player() {
     textSize(15);
     textFont(myFont)
     text(pistol.ammoClip + " / " + pistol.ammoPool, 208, height-6); // Print out ammo
+
+
     pop();
 
     // Health bar

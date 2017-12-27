@@ -30,12 +30,8 @@ function checkMouse(x, y, xs, ys) {
 
 function preload() {
 	// Load all assets
-	myFont = loadFont("Assets/Fonts/Pixel.ttf");
-	hud = loadImage("Assets/IngameO.png");
-	ak47 = loadImage("Assets/ak47.png");
-	glock = loadImage("Assets/glock19.png");
-}
 
+}
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	player = new Player();
@@ -193,6 +189,7 @@ function draw() {
 	}
 
 	// HUD
+
 	if (pistol.reloading) {
 		strokeWeight(0);
 		rect(player.pos.x, player.pos.y+45, 55, 10, 10);
@@ -218,6 +215,7 @@ function draw() {
 	image(hud, 0, 0, windowWidth, windowHeight);
 	image(ak47, 175, height-110, ak47.width-1050, ak47.height-380);
 	image(glock, 175, height-50, glock.width-1400, glock.height-950);
+
 
 	for (var i = 0; i < windows.length; i++) {
 		windows[i].update();
